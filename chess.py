@@ -31,6 +31,10 @@ class Knight(Piece):
     def is_valid_move(self):
         pass
 
+"""
+Esto es un comentario de prueba para Git
+"""
+
 class Pawn(Piece):
     
     def __init__(self):
