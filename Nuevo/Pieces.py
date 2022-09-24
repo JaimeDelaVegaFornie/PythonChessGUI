@@ -4,11 +4,19 @@ class Piece:
         self.y = y
         self.color = color
 
-    def isWhite(self):
+    def is_white(self):
         return self.color == 'W'
 
-    def isBlack(self):
+    def is_black(self):
         return self.color == 'B'
+
+    def __str__(self):
+        if self.is_black():
+            return self.name.lower()
+        elif self.is_white():
+            return self.name
+        else:
+            return ' '
 
 class Pawn(Piece):
     def __init__(self, x, y, color):
