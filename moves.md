@@ -26,3 +26,18 @@ examples in pieces
 		x+j | y+j | x+j, y+i
 	peon:
 		yi+f | y+tj
+
+    def subCalc(e):
+        r = 1
+        for c in e:
+            r *= locals()[e]
+        return r
+
+    def calc(e):
+        r = 0
+        P = [str(p) for p in e.split('+') if p.strip()]
+        for p in P:
+            r += Piece.subCalc(p)
+        return r
+
+    L = [str(e) for e in ec.split(',') if e.strip()]

@@ -1,5 +1,13 @@
+import os
+
 import Board
 
-class Chess():
-    def __init__(self):
-        pass
+b = Board.Board()
+
+b.printTable()
+move = input()
+
+print("\n"*20)
+
+b.move(move)
+b.printTable()

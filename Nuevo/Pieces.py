@@ -1,69 +1,42 @@
-class Piece():
-
-    def __init__(self,color):
+class Piece:
+    def __init__(self, x, y, color):
+        self.x = x
+        self.y = y
         self.color = color
-        self.name = ""
 
-    def is_valid_move(self):
-        pass
+    def isWhite(self):
+        return self.color == 'W'
 
-    def is_white(self):
-        return self.color
-
-    def __str__(self):
-        return self.name
-
-class Knight(Piece):
-
-    def __init__(self,Bool):
-        super().__init__(color)
-        self.name = "N"
-
-    def is_valid_move(self,board,start,to):
-        pass
-
+    def isBlack(self):
+        return self.color == 'B'
 
 class Pawn(Piece):
-
-    def __init__(self):
-        super().__init__(color)
-        self.name = "P"
-
-    def is_valid_move(self):
-        pass
-
-class Bishop(Piece):
-
-    def __init__(self):
-        super().__init__(color)
-        self.name = "B"
-
-    def is_valid_move(self):
-        pass
+    def __init__(self, x, y, color):
+        super().__init__(x, y, color)
+        self.name = 'P'
 
 class Rook(Piece):
+    def __init__(self, x, y, color):
+        super().__init__(x, y, color)
+        self.name = 'R'
 
-    def __init__(self):
-        super().__init__(color)
-        self.name = "R"
+class Knight(Piece):
+    def __init__(self, x, y, color):
+        super().__init__(x, y, color)
+        self.name = 'N'
+        # moves = ["x+j,y+2i", "x+2j,y+i"]
 
-    def is_valid_move():
-        pass
+class Bishop(Piece):
+    def __init__(self, x, y, color):
+        super().__init__(x, y, color)
+        self.name = 'B'
 
 class Queen(Piece):
-
-    def __init__(self):
-        super().__init__(color)
-        self.name = "Q"
-
-    def is_valid_move(self):
-        pass
+    def __init__(self, x, y, color):
+        super().__init__(x, y, color)
+        self.name = 'Q'
 
 class King(Piece):
-
-    def __init__(self):
-        super().__init__(color)
-        self.name = "K"
-
-    def is_valid_move(self):
-        pass
+    def __init__(self, x, y, color):
+        super().__init__(x, y, color)
+        self.name = 'K'
