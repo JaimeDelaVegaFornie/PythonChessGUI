@@ -5,9 +5,14 @@ import Board
 b = Board.Board()
 
 b.printTable()
-move = input()
+    
+End = False;#TODO-> Cambiar esto por atributo propio de la clase board (Algo estilo board.End que compruebe si hay jaque mate o no)
 
-print("\n"*20)
+while not End:
 
-b.move(move)
-b.printTable()
+    move = input()
+
+    print("\n"*20)
+
+    b.move(move)
+    b.printTable()
