@@ -4,12 +4,49 @@ import Pieces
 
 
 class Board:
+    """ A class used for initializing the chess board and manage it.
+    
+        Attributes:
+        ----------
+        table : matrix
+        turn : int
+        side : 1 (White), -1 (black)
+        piece_dict : A dictionary with all pieces
+        
+        Methods
+        ----------
+        coord_to_pos(int : x, int : y)
+            translates chess board coordinates to language positions
+        pos_to_coord(int : x, int : y)
+            translates language positions to board coordinates
+        read_FEN(str : FEN)
+            reads and translates FEN string containing all positions into the chess table
+        write_FEN()
+            opens log.txt file and writes the current positions translated into FEN string
+        parse_move(str : move)
+            prints moves translated into table positions (debugging purposes or backend purposes)
+        move(str : moveStr)
+            moves piece into the next square in 'pSq1Sq2' format (p : piece, Sq1 : 1st position: 
+                                                                  Sq2 : last position)
+            Needs some changes like when a piece promotes.
+        print_board()
+            prints the current state of chess' board, displaying (1-8), (a-h) notation
+        """
+    
     PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING = 'P', 'R', 'N', 'B', 'Q', 'K'
-    table = [[]]
     turn = 0
-    side = 1  # 1 = white, -1 = black
+    side = 1
+    
 
     def __init__(self, FEN=None):
+        self.piece_dict = {
+            Board.PAWN: Pieces.Pawn,
+            Board.ROOK: Pieces.Rook,
+            Board.KNIGHT: Pieces.Knight,
+            Board.BISHOP: Pieces.Bishop,
+            Board.QUEEN: Pieces.Queen,
+            Board.KING: Pieces.King
+        }
         self.table = [[None for x in range(8)] for y in range(8)]
         self.turn = 0
         self.side = 1
@@ -21,30 +58,31 @@ class Board:
         self.log.close()
 
     def coord_to_pos(x, y):
+        """ int : x,y : coordinates """
         return chr(ord('a') + x), chr(ord('1') + y)
 
     def pos_to_coord(file, rank):
-        return ord(file) - ord('a'), ord(rank) - ord('1')
+        """ char : x,y : positions """
+        return (ord(file) - ord('a'), ord(rank) - ord('1'))
 
     def read_FEN(self, FEN):
+        """ str : FEN : tables' state """
         def FEN_white(c):
+            """ char : c : checks if piece is white """
             return c in "PRNBQK"
         def FEN_black(c):
+            """ char : c : checks if piece is black"""
             return c in "prnbqk"
         def assign_piece(x, y, c):
+            """ int : x, y: coordinates
+                char c : color
+                Initializes the piece in table
+            """
             color = ('W' if FEN_white(c) else 'B')
             c = c.upper()
-            piece_dict = {
-                Board.PAWN: Pieces.Pawn(x, y, color),
-                Board.ROOK: Pieces.Rook(x, y, color),
-                Board.KNIGHT: Pieces.Knight(x, y, color),
-                Board.BISHOP: Pieces.Bishop(x, y, color),
-                Board.QUEEN: Pieces.Queen(x, y, color),
-                Board.KING: Pieces.King(x, y, color)
-            }
-            return piece_dict[c]
+            return self.piece_dict[c](x,y,color)
 
-        accepted = "prnbqkPRNBQK/bw0123456789 "
+        accepted = "prnbqkPRNBQK/bw0123456789"
         if any(c not in accepted for c in FEN):
             self.read_FEN("8/8/8/8/8/8/8/8")
             return
@@ -66,32 +104,40 @@ class Board:
         for y in range(len(table)):
             count = 0
             for x in range(len(table[y])):
-                c = table[y][x]
-                if c is None:
+                square = table[y][x]
+                if square is None:
                     count += 1
                 else:
-                    FEN += (str(count) if count != 0 else "") + (c.name if c.is_white() else c.name.lower())
+                    FEN += (str(count) if count != 0 else "") + (str(square) if square.is_white() else str(square).lower())
                     count = 0
             FEN += (str(count) if count != 0 else "") + ("/" if y < 7 else "")
         return FEN
 
-    def parse_move(self, m):
+    def parse_move(self, move): #debug, backend function
+        """ str : move """
         def parse_pos(pos):
+            """ str : pos
+                prints the positions' swap
+            """
             print(pos[0] + "x" + pos[1] + " --> ", end="")
             x, y = ord(pos[0]) - ord('a'), ord(pos[1]) - ord('1')
             print(str(x) + "x" + str(y))
             return x, y
 
-        piece = Board.PAWN
-        if m[0].upper() in [Board.ROOK, Board.KNIGHT, Board.BISHOP, Board.QUEEN, Board.KING]:
-            piece = m[0]
-            m = m[1:]
-        sx, sy = parse_pos(m[:2])
-        dx, dy = parse_pos(m[-2:])
+        piece = Board.PAWN # debugging purposes
+        if move[0].upper() in self.piece_dict.keys():
+            piece = move[0]
+            move = move[1:]
+        sx, sy = parse_pos(move[:2])
+        dx, dy = parse_pos(move[-2:])
         return piece, sx, sy, dx, dy
 
     def move(self, moveStr):
+        """ str : moveSTr """
         def log_move(piece, sx, sy, dx, dy):
+            """ char : piece, sx, sy, dx, dy
+                writes current move into log.txt
+            """
             if self.side > 0:
                 self.log.write(str(self.turn + 1) + ".")
             self.log.write(" ")
@@ -114,8 +160,7 @@ class Board:
         return False
 
     def print_board(self):
-
         print("\n".join(
-            "".join(["{}".format(('-' if piece is None else str(piece)).center(3)) + (' ' + chr(ord('8')-i) if j == 7 else '') for j, piece in enumerate(row)]) for i, row in
+            "".join(["{}".format((' ' + chr(ord('8')-i) if j == 0 else '') + ('-' if piece is None else str(piece)).center(3)) for j, piece in enumerate(row)]) for i, row in
             enumerate(self.table[::-1])))
-        print("\n".join(["".join("{}".format(chr(ord('A')+i)).center(3) for i in range(len(self.table)))]))
+        print(("  ") + "\n".join(["".join("{}".format(chr(ord('A')+i)).center(3) for i in range(len(self.table)))]))
