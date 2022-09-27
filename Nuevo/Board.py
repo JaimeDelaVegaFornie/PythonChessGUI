@@ -114,6 +114,8 @@ class Board:
         return False
 
     def print_board(self):
+
         print("\n".join(
-            "".join(["{}".format('-' if piece is None else str(piece)).center(3) for piece in row]) for row in
-            self.table[::-1]))
+            "".join(["{}".format(('-' if piece is None else str(piece)).center(3)) + (' ' + chr(ord('8')-i) if j == 7 else '') for j, piece in enumerate(row)]) for i, row in
+            enumerate(self.table[::-1])))
+        print("\n".join(["".join("{}".format(chr(ord('A')+i)).center(3) for i in range(len(self.table)))]))
