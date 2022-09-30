@@ -5,14 +5,14 @@ import Pieces
 
 class Board:
     """ A class used for initializing the chess board and manage it.
-    
+
         Attributes:
         ----------
         table : matrix
         turn : int
-        side : 1 (White), -1 (black)
+        side : True (White), False (black)
         piece_dict : A dictionary with all pieces
-        
+
         Methods
         ----------
         coord_to_pos(int : x, int : y)
@@ -26,17 +26,17 @@ class Board:
         parse_move(str : move)
             prints moves translated into table positions (debugging purposes or backend purposes)
         move(str : moveStr)
-            moves piece into the next square in 'pSq1Sq2' format (p : piece, Sq1 : 1st position: 
+            moves piece into the next square in 'pSq1Sq2' format (p : piece, Sq1 : 1st position:
                                                                   Sq2 : last position)
             Needs some changes like when a piece promotes.
         print_board()
             prints the current state of chess' board, displaying (1-8), (a-h) notation
         """
-    
+
     PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING = 'P', 'R', 'N', 'B', 'Q', 'K'
     turn = 0
-    side = 1
-    
+    side = True
+
 
     def __init__(self, FEN=None):
         self.piece_dict = {
@@ -49,7 +49,7 @@ class Board:
         }
         self.table = [[None for x in range(8)] for y in range(8)]
         self.turn = 0
-        self.side = 1
+        self.side = True
         self.read_FEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR" if FEN is None else FEN)
         self.log = open("log.txt", "w")
 
@@ -132,19 +132,29 @@ class Board:
         dx, dy = parse_pos(move[-2:])
         return piece, sx, sy, dx, dy
 
-    def move(self, moveStr):
+
+
+    def piece(self,x,y):
+        """
+        Should return the piece (as an object) that is in the (x,y) position in the board
+        """
+        pass
+
+
+
+    def move(self, moveStr): ## TODO: make sure that sx, sy, dx, dy are inside the board
         """ str : moveSTr """
         def log_move(piece, sx, sy, dx, dy):
             """ char : piece, sx, sy, dx, dy
                 writes current move into log.txt
             """
-            if self.side > 0:
+            if self.side:
                 self.log.write(str(self.turn + 1) + ".")
             self.log.write(" ")
             if piece is not Board.PAWN:
                 self.log.write(piece if self.turn > 0 else piece.lower())
             self.log.write(sx + sy + dx + dy)
-            if self.side < 0:
+            if not self.side:
                 self.log.write("\n")
 
         if moveStr == "end":
@@ -155,8 +165,8 @@ class Board:
         sx, sy = Board.coord_to_pos(sx, sy)
         dx, dy = Board.coord_to_pos(dx, dy)
         log_move(piece, sx, sy, dx, dy)
-        self.turn += 1 if self.side < 0 else 0
-        self.side *= -1
+        self.turn += 1 if not self.side else 0
+        self.side = not self.side
         return False
 
     def print_board(self):

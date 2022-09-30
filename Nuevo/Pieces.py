@@ -23,10 +23,16 @@ class Pawn(Piece):
         super().__init__(x, y, color)
         self.name = 'P'
 
+    def is_valid_move(self):
+        pass
+
 class Rook(Piece):
     def __init__(self, x, y, color):
         super().__init__(x, y, color)
         self.name = 'R'
+
+    def is_valid_move(self):
+        pass
 
 class Knight(Piece):
     def __init__(self, x, y, color):
@@ -34,17 +40,34 @@ class Knight(Piece):
         self.name = 'N'
         # moves = ["x+j,y+2i", "x+2j,y+i"]
 
+    def is_valid_move(self):
+        pass
+
 class Bishop(Piece):
     def __init__(self, x, y, color):
         super().__init__(x, y, color)
         self.name = 'B'
+
+    def is_valid_move(self):
+        pass
 
 class Queen(Piece):
     def __init__(self, x, y, color):
         super().__init__(x, y, color)
         self.name = 'Q'
 
+    def is_valid_move(self,board,sx,sy,dx,dy):
+        if board.piece(x,y).color==board.side:
+            if sx==dx or sy==dy:
+                pass
+        else False
+
+
+
 class King(Piece):
     def __init__(self, x, y, color):
         super().__init__(x, y, color)
         self.name = 'K'
+
+    def is_valid_move(self,board,sx,sy,dx,dy):
+        pass

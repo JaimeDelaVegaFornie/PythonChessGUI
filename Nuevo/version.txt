@@ -1,0 +1,6 @@
+0.1.1
+This is for version control.
+There are three digits, everytime someone makes any kind of change, he has to sum one to the last digit, so:
+For group reunions the center digit will be changed and for milestones reached the first one will be changed (reading left to right)
+Individual contribution: 0.1.0 -> 0.1.1
+Group contribution: 0.1.1 -> 0.2.0
